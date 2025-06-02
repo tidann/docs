@@ -883,7 +883,7 @@ class Development(Base):
 
     def __init__(self):
         # pylint: disable=invalid-name
-        self.INSTALLED_APPS += ["django_extensions", "drf_spectacular_sidecar"]
+        self.INSTALLED_APPS += ["django_extensions"]
 
 
 class Test(Base):
@@ -898,10 +898,6 @@ class Test(Base):
     STATIC_ROOT = None
 
     CELERY_TASK_ALWAYS_EAGER = values.BooleanValue(True)
-
-    def __init__(self):
-        # pylint: disable=invalid-name
-        self.INSTALLED_APPS += ["drf_spectacular_sidecar"]
 
 
 class ContinuousIntegration(Test):
