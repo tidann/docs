@@ -62,7 +62,7 @@ class Base(Configuration):
     """
 
     DEBUG = False
-    USE_SWAGGER = False
+    USE_SWAGGER = values.BooleanValue(False, environ_name="USE_SWAGGER", environ_prefix=None)
 
     API_VERSION = "v1.0"
 
@@ -322,6 +322,7 @@ class Base(Configuration):
         # OIDC third party
         "mozilla_django_oidc",
         "lasuite.malware_detection",
+        "drf_spectacular_sidecar"
     ]
 
     # Cache
@@ -855,7 +856,7 @@ class Build(Base):
     This environment should not be used to run the application. Just to build it with non-blocking
     settings.
     """
-
+    USE_SWAGGER = True
     SECRET_KEY = values.Value("DummyKey")
     STORAGES = {
         "default": {
@@ -910,7 +911,7 @@ class Development(Base):
 
     def __init__(self):
         # pylint: disable=invalid-name
-        self.INSTALLED_APPS += ["django_extensions", "drf_spectacular_sidecar"]
+        self.INSTALLED_APPS += ["django_extensions"]
 
 
 class Test(Base):
@@ -922,10 +923,6 @@ class Test(Base):
     USE_SWAGGER = True
 
     CELERY_TASK_ALWAYS_EAGER = values.BooleanValue(True)
-
-    def __init__(self):
-        # pylint: disable=invalid-name
-        self.INSTALLED_APPS += ["drf_spectacular_sidecar"]
 
 
 class ContinuousIntegration(Test):
