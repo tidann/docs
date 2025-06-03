@@ -1,22 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Box } from '@/components';
+import { Box, Icon } from '@/components';
 
 import { CodeEditor } from '../../../CodeEditor/index';
+import { blockStyles } from '../../shared/styles';
+import { useMermaid } from '../hooks/useMermaid';
 import type { MermaidRendererProps } from '../types';
-
-interface MermaidModule {
-  initialize: (config: {
-    startOnLoad: boolean;
-    theme: string;
-    securityLevel: string;
-  }) => void;
-  render: (id: string, text: string) => Promise<{ svg: string }>;
-}
-
-interface MermaidImport {
-  default: MermaidModule;
-}
 
 export const MermaidRenderer = ({
   diagram,
@@ -25,42 +14,24 @@ export const MermaidRenderer = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const blockRef = useRef<HTMLDivElement>(null);
   const [isLocalEditing, setIsLocalEditing] = useState(false);
+  const { mermaidModule, error: mermaidError } = useMermaid();
   const [error, setError] = useState<string | null>(null);
-  const [mermaidModule, setMermaidModule] = useState<MermaidModule | null>(
-    null,
+  const diagramId = useRef(
+    `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`,
   );
-
-  useEffect(() => {
-    const loadMermaid = async () => {
-      try {
-        const mermaid = (await import('mermaid')) as MermaidImport;
-        mermaid.default.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          securityLevel: 'loose',
-        });
-        setMermaidModule(mermaid.default);
-      } catch (error) {
-        console.error('Failed to load Mermaid:', error);
-        setError('Failed to load Mermaid');
-      }
-    };
-
-    void loadMermaid();
-  }, []);
 
   useEffect(() => {
     if (containerRef.current && mermaidModule) {
       const renderDiagram = async () => {
         try {
           const { svg } = await mermaidModule.render(
-            'mermaid-diagram',
+            diagramId.current,
             diagram,
           );
           if (containerRef.current) {
             containerRef.current.innerHTML = svg;
           }
-          setError(null);
+          setError('');
         } catch (error) {
           console.error('Mermaid rendering error:', error);
           setError('Invalid Mermaid diagram');
@@ -69,7 +40,6 @@ export const MermaidRenderer = ({
           }
         }
       };
-
       void renderDiagram();
     }
   }, [diagram, mermaidModule]);
@@ -78,11 +48,7 @@ export const MermaidRenderer = ({
     <Box
       ref={blockRef}
       $padding="1rem"
-      style={{
-        width: '100%',
-        overflowX: 'auto',
-        cursor: 'pointer',
-      }}
+      style={blockStyles.container}
       onClick={() => setIsLocalEditing(true)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -92,18 +58,26 @@ export const MermaidRenderer = ({
       role="button"
       tabIndex={0}
     >
-      <div ref={containerRef} />
-      {error && (
+      <div
+        ref={containerRef}
+        style={{
+          display: diagram.trim() && !error && !mermaidError ? 'block' : 'none',
+        }}
+      />
+      {!diagram.trim() && (
+        <div style={blockStyles.placeholder}>
+          <Icon iconName="account_tree" $size="18px" />
+          Click here to edit the Mermaid diagram.
+        </div>
+      )}
+      {diagram.trim() && (error || mermaidError) && (
         <Box
           $margin="0.5rem 0 0 0"
           $padding="0.5rem"
           $background="#fff3f3"
-          style={{
-            borderRadius: '4px',
-            color: '#d32f2f',
-          }}
+          style={blockStyles.error}
         >
-          {error}
+          {error || mermaidError}
         </Box>
       )}
       {isLocalEditing && (
@@ -119,3 +93,4 @@ export const MermaidRenderer = ({
     </Box>
   );
 };
+ 

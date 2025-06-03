@@ -2,9 +2,10 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Box } from '@/components';
+import { Box, Icon } from '@/components';
 
-import { CodeEditor } from '../../../CodeEditor';
+import { CodeEditor } from '../../../CodeEditor/index';
+import { blockStyles } from '../../shared/styles';
 import type { LatexRendererProps } from '../types';
 
 export const LatexRenderer = ({
@@ -32,11 +33,7 @@ export const LatexRenderer = ({
     <Box
       ref={blockRef}
       $padding="1rem"
-      style={{
-        width: '100%',
-        overflowX: 'auto',
-        cursor: 'pointer',
-      }}
+      style={blockStyles.container}
       onClick={() => setIsLocalEditing(true)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -46,11 +43,23 @@ export const LatexRenderer = ({
       role="button"
       tabIndex={0}
     >
-      <div ref={containerRef} />
+      <div
+        ref={containerRef}
+        style={{
+          display: formula.trim() ? 'block' : 'none',
+        }}
+      />
+      {!formula.trim() && (
+        <div style={blockStyles.placeholder}>
+          <Icon iconName="functions" $size="18px" />
+          Click here to edit the LaTeX formula.
+        </div>
+      )}
       {isLocalEditing && (
         <CodeEditor
           value={formula}
           onChange={onFormulaChange}
+          language="latex"
           onClickOutside={() => setIsLocalEditing(false)}
           parentRef={blockRef}
         />
@@ -58,3 +67,4 @@ export const LatexRenderer = ({
     </Box>
   );
 };
+ 

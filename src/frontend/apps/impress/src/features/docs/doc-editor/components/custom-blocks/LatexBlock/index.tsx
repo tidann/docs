@@ -13,7 +13,6 @@ export const LatexBlock = createReactBlockSpec(blockSpec, {
         props: {
           formula: newFormula,
           textAlignment: block.props.textAlignment,
-          backgroundColor: block.props.backgroundColor,
         },
       });
     };
