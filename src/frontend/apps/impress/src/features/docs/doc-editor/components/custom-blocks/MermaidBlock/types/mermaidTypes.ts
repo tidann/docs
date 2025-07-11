@@ -4,7 +4,7 @@ export interface MermaidModule {
     theme: string;
     securityLevel: string;
   }) => void;
-  render: (id: string, text: string) => Promise<{ svg: string; }>;
+  render: (id: string, text: string) => Promise<{ svg: string }>;
 }
 
 export interface MermaidImport {

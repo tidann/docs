@@ -15,6 +15,7 @@ export const LatexRenderer = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const blockRef = useRef<HTMLDivElement>(null);
   const [isLocalEditing, setIsLocalEditing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -23,7 +24,11 @@ export const LatexRenderer = ({
           displayMode: true,
           throwOnError: false,
         });
-      } catch {
+        setError(null);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Invalid LaTeX formula';
+        setError(errorMessage);
         containerRef.current.innerHTML = '/!\\ Invalid LaTeX formula';
       }
     }
@@ -62,6 +67,7 @@ export const LatexRenderer = ({
           language="latex"
           onClickOutside={() => setIsLocalEditing(false)}
           parentRef={blockRef}
+          error={error}
         />
       )}
     </Box>

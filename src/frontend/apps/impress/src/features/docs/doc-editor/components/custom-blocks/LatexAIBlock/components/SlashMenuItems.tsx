@@ -16,7 +16,7 @@ export const getLatexAIReactSlashMenuItems = (
     onItemClick: () => {
       insertOrUpdateBlock(editor, {
         type: 'latexai',
-        props: {}
+        props: {},
       });
     },
     aliases: ['latex', 'math', 'formula', 'equation', 'katex'],

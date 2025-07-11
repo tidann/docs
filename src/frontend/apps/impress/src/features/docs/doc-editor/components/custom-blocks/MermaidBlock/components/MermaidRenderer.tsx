@@ -34,7 +34,9 @@ export const MermaidRenderer = ({
           setError('');
         } catch (error) {
           console.error('Mermaid rendering error:', error);
-          setError('Invalid Mermaid diagram');
+          const errorMessage =
+            error instanceof Error ? error.message : 'Invalid Mermaid diagram';
+          setError(errorMessage);
           if (containerRef.current) {
             containerRef.current.innerHTML = '/!\\ Invalid Mermaid diagram';
           }
@@ -70,16 +72,6 @@ export const MermaidRenderer = ({
           Click here to edit the Mermaid diagram.
         </div>
       )}
-      {diagram.trim() && (error || mermaidError) && (
-        <Box
-          $margin="0.5rem 0 0 0"
-          $padding="0.5rem"
-          $background="#fff3f3"
-          style={blockStyles.error}
-        >
-          {error || mermaidError}
-        </Box>
-      )}
       {isLocalEditing && (
         <CodeEditor
           value={diagram}
@@ -87,6 +79,7 @@ export const MermaidRenderer = ({
           onClickOutside={() => setIsLocalEditing(false)}
           parentRef={blockRef}
           language="mermaid"
+          error={error || mermaidError}
         />
       )}
     </Box>

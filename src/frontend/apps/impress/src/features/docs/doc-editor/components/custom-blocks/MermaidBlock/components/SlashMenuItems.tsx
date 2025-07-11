@@ -28,4 +28,3 @@ export const getMermaidReactSlashMenuItems = (
     subtext: t('Add a Mermaid diagram block'),
   },
 ];
- 

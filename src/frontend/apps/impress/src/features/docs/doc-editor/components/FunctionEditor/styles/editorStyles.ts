@@ -1,4 +1,4 @@
-import { VerticalAlign } from "docx";
+import { VerticalAlign } from 'docx';
 
 export const containerStyles = {
   position: 'absolute',
@@ -17,40 +17,40 @@ export const containerStyles = {
 export const editorContainerStyles = {
   width: '100%',
   marginRight: '1rem',
-  position : 'relative',
+  position: 'relative',
 } as const;
 
 export const functionEditorsStyle = {
-  position : 'relative',
-  width : '100%',
-  display : 'block',
-  VerticalAlign : 'center',
+  position: 'relative',
+  width: '100%',
+  display: 'block',
+  VerticalAlign: 'center',
 } as const;
 
 export const divContainer = {
-  width : '100%',
-  alignItems : 'top',
+  width: '100%',
+  alignItems: 'top',
 } as const;
 
 export const functionEditorsContainer = {
-  width : '70%',
-  display : 'inline-block',
+  width: '70%',
+  display: 'inline-block',
 } as const;
 
 export const leftButtonsContainer = {
-  width : '10%',
-  display : 'inline-block',
-  verticalAlign : 'top',
-  textAlign : 'center',
+  width: '10%',
+  display: 'inline-block',
+  verticalAlign: 'top',
+  textAlign: 'center',
 } as const;
 
 export const rightButtonsContainer = {
-  width : '20%',
-  display : 'inline-block',
-  verticalAlign : 'top',
-  textAlign : 'center',
+  width: '20%',
+  display: 'inline-block',
+  verticalAlign: 'top',
+  textAlign: 'center',
 } as const;
 
 export const inputStyle = {
-  borderRadius : '5px',
-} as const
+  borderRadius: '5px',
+} as const;

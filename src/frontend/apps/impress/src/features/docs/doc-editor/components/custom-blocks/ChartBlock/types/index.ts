@@ -5,7 +5,12 @@ export interface ChartRendererProps {
   min: number;
   max: number;
   num: number;
-  onFormulaChange: (functions: string[], min : number, max : number, num : number) => void;
+  onFormulaChange: (
+    functions: string[],
+    min: number,
+    max: number,
+    num: number,
+  ) => void;
 }
 
 export interface ChartBlockProps {

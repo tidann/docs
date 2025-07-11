@@ -7,12 +7,6 @@ export const containerStyles = {
   borderRadius: '4px',
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'flex-start',
+  flexDirection: 'column',
   boxSizing: 'border-box',
-} as const;
-
-export const editorContainerStyles = {
-  width: '100%',
-  marginRight: '1rem',
 } as const;

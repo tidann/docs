@@ -3,7 +3,7 @@ export interface FunctionEditorProps {
   min: number;
   max: number;
   num: number;
-  onChange: (fun: string[], min : number, max : number, num : number) => void;
+  onChange: (fun: string[], min: number, max: number, num: number) => void;
   onClickOutside: () => void;
   parentRef?: React.RefObject<HTMLDivElement | null>;
 }

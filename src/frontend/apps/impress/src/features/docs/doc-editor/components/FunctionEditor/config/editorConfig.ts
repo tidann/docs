@@ -77,7 +77,7 @@ export const getEditorOptions = (
   contextmenu: false,
   scrollbar: {
     vertical: 'hidden',
-    horizontal: 'hidden'
+    horizontal: 'hidden',
   },
   fontSize: 14,
   fontFamily: 'monospace',
@@ -85,6 +85,6 @@ export const getEditorOptions = (
   wrappingStrategy: 'advanced',
   wrappingIndent: 'same',
   language,
-  renderLineHighlight: "none",
+  renderLineHighlight: 'none',
   overviewRulerLanes: 0,
 });

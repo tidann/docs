@@ -8,7 +8,16 @@ import { Box } from '@/components';
 import { getEditorOptions, initializeMonaco } from './config/editorConfig';
 import { useClickOutside } from './hooks/useClickOutside';
 import { useEditorDimensions } from './hooks/useEditorDimensions';
-import { containerStyles, editorContainerStyles, functionEditorsStyle, inputStyle, rightButtonsContainer, leftButtonsContainer, functionEditorsContainer, divContainer } from './styles/editorStyles';
+import {
+  containerStyles,
+  editorContainerStyles,
+  functionEditorsStyle,
+  inputStyle,
+  rightButtonsContainer,
+  leftButtonsContainer,
+  functionEditorsContainer,
+  divContainer,
+} from './styles/editorStyles';
 import type { FunctionEditorProps } from './types';
 import { winterCGFetchIntegration } from '@sentry/nextjs';
 import { Icon } from '@/components';
@@ -17,10 +26,10 @@ import 'katex/dist/katex.min.css';
 
 const defaultNewFunction = '\\cos(3*x)';
 
-const formatNum = (nV : number) => {
+const formatNum = (nV: number) => {
   let res = Math.round(nV);
   return res < 2 ? 2 : res;
-}
+};
 
 export const FunctionEditor = ({
   functions,
@@ -29,10 +38,11 @@ export const FunctionEditor = ({
   num,
   onChange,
   onClickOutside,
-  parentRef
+  parentRef,
 }: FunctionEditorProps) => {
   const { t } = useTranslation();
-  const { height: parentHeight, width: parentWidth } = useEditorDimensions(parentRef);
+  const { height: parentHeight, width: parentWidth } =
+    useEditorDimensions(parentRef);
   const editorRef = useClickOutside(onClickOutside);
   const [localFunctions, setLocalFunctions] = useState(functions);
   const [localMin, setLocalMin] = useState(min);
@@ -53,24 +63,47 @@ export const FunctionEditor = ({
   const containerWidth = `${parentWidth}px`;
   const containerMargin = `${parentHeight}px 0 0 -16px`;
 
-  let functionEditors = localFunctions.map((fun,i) =>
+  let functionEditors = localFunctions.map((fun, i) => (
     <Box style={editorContainerStyles}>
       <div style={functionEditorsStyle}>
-        <p style={{display : 'inline-block', width : '15%', verticalAlign : 'top', textAlign : 'center'}}><div dangerouslySetInnerHTML={{__html: katex.renderToString(`f_{${i+1}}(x)=`)}}></div></p>
-        <div style={{width : '85%', display : 'inline-block', verticalAlign : 'top', marginBottom : '5px'}}>
-        <Editor
-          language={'latex'}
-          height="1.5em"
-          value={fun}
-          onChange={(val) => setLocalFunctions(localFunctions.map((x,j)=>i==j ? (val || '') : x))}
-          options={getEditorOptions()}
-          theme="vs-light"
-    
-        />
+        <p
+          style={{
+            display: 'inline-block',
+            width: '15%',
+            verticalAlign: 'top',
+            textAlign: 'center',
+          }}
+        >
+          <div
+            dangerouslySetInnerHTML={{
+              __html: katex.renderToString(`f_{${i + 1}}(x)=`),
+            }}
+          ></div>
+        </p>
+        <div
+          style={{
+            width: '85%',
+            display: 'inline-block',
+            verticalAlign: 'top',
+            marginBottom: '5px',
+          }}
+        >
+          <Editor
+            language={'latex'}
+            height="1.5em"
+            value={fun}
+            onChange={(val) =>
+              setLocalFunctions(
+                localFunctions.map((x, j) => (i == j ? val || '' : x)),
+              )
+            }
+            options={getEditorOptions()}
+            theme="vs-light"
+          />
         </div>
       </div>
     </Box>
-  )
+  ));
 
   return (
     <Box
@@ -87,27 +120,127 @@ export const FunctionEditor = ({
     >
       <div style={divContainer}>
         <div style={leftButtonsContainer}>
-          
-          <Button style={{background : 'none'}} onClick={() => { setLocalFunctions(prev => (prev.length < 5) ? [...prev, defaultNewFunction] : prev); }}><Icon iconName="add" $size="30px" $color="black" /></Button>
+          <Button
+            style={{ background: 'none' }}
+            onClick={() => {
+              setLocalFunctions((prev) =>
+                prev.length < 5 ? [...prev, defaultNewFunction] : prev,
+              );
+            }}
+          >
+            <Icon iconName="add" $size="30px" $color="black" />
+          </Button>
           <br></br>
-          <Button style={{background : 'none'}} onClick={() => { setLocalFunctions(prev => (prev.length > 1) ? prev.slice(0, -1) : prev); }}><Icon iconName="remove" $size="30px" $color="black" /></Button>
+          <Button
+            style={{ background: 'none' }}
+            onClick={() => {
+              setLocalFunctions((prev) =>
+                prev.length > 1 ? prev.slice(0, -1) : prev,
+              );
+            }}
+          >
+            <Icon iconName="remove" $size="30px" $color="black" />
+          </Button>
         </div>
         <div style={functionEditorsContainer}>
           {functionEditors}
           <br />
-          <p style={{width : '32%', display : 'inline-block', marginLeft : '0%'}}><div dangerouslySetInnerHTML={{__html: katex.renderToString(`x_{\\text{min}}`)}}></div></p>
-          <p style={{width : '32%', display : 'inline-block', marginLeft : '2%'}}><div dangerouslySetInnerHTML={{__html: katex.renderToString(`x_{\\text{max}}`)}}></div></p>
-          <p style={{width : '32%', display : 'inline-block', marginLeft : '2%'}}><div dangerouslySetInnerHTML={{__html: katex.renderToString(`n_{\\text{points}}`)}}></div></p>
-          <input type='number' style={{padding : '5px', width : '32%', borderRadius: '5px', border : "1px solid grey"}} value={localMin} onChange={(e) => onChange(localFunctions, Number(e.target.value), localMax, localNum) }/>
-          <input type='number' style={{width : '32%', marginLeft : '2%', padding : '5px', borderRadius: '5px', border : "1px solid grey"}} value={localMax} onChange={(e) => onChange(localFunctions, localMin,  Number(e.target.value), localNum) }/>
-          <input type='number' style={{width : '32%', marginLeft : '2%', padding : '5px', borderRadius: '5px', border : "1px solid grey"}} value={localNum} onChange={(e) => onChange(localFunctions, localMin,  localMax, formatNum(Number(e.target.value))) }/>
+          <p
+            style={{ width: '32%', display: 'inline-block', marginLeft: '0%' }}
+          >
+            <div
+              dangerouslySetInnerHTML={{
+                __html: katex.renderToString(`x_{\\text{min}}`),
+              }}
+            ></div>
+          </p>
+          <p
+            style={{ width: '32%', display: 'inline-block', marginLeft: '2%' }}
+          >
+            <div
+              dangerouslySetInnerHTML={{
+                __html: katex.renderToString(`x_{\\text{max}}`),
+              }}
+            ></div>
+          </p>
+          <p
+            style={{ width: '32%', display: 'inline-block', marginLeft: '2%' }}
+          >
+            <div
+              dangerouslySetInnerHTML={{
+                __html: katex.renderToString(`n_{\\text{points}}`),
+              }}
+            ></div>
+          </p>
+          <input
+            type="number"
+            style={{
+              padding: '5px',
+              width: '32%',
+              borderRadius: '5px',
+              border: '1px solid grey',
+            }}
+            value={localMin}
+            onChange={(e) =>
+              onChange(
+                localFunctions,
+                Number(e.target.value),
+                localMax,
+                localNum,
+              )
+            }
+          />
+          <input
+            type="number"
+            style={{
+              width: '32%',
+              marginLeft: '2%',
+              padding: '5px',
+              borderRadius: '5px',
+              border: '1px solid grey',
+            }}
+            value={localMax}
+            onChange={(e) =>
+              onChange(
+                localFunctions,
+                localMin,
+                Number(e.target.value),
+                localNum,
+              )
+            }
+          />
+          <input
+            type="number"
+            style={{
+              width: '32%',
+              marginLeft: '2%',
+              padding: '5px',
+              borderRadius: '5px',
+              border: '1px solid grey',
+            }}
+            value={localNum}
+            onChange={(e) =>
+              onChange(
+                localFunctions,
+                localMin,
+                localMax,
+                formatNum(Number(e.target.value)),
+              )
+            }
+          />
         </div>
-        
+
         <div style={rightButtonsContainer}>
-          <Button style={{display : 'inline-block', verticalAlign : 'top'}} onClick={() => onChange(localFunctions, localMin, localMax, localNum)}>{t('Validate')}</Button>
+          <Button
+            style={{ display: 'inline-block', verticalAlign: 'top' }}
+            onClick={() =>
+              onChange(localFunctions, localMin, localMax, localNum)
+            }
+          >
+            {t('Validate')}
+          </Button>
         </div>
       </div>
-      
     </Box>
   );
 };

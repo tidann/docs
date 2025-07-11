@@ -6,6 +6,7 @@ export interface CodeEditorProps {
   language?: string;
   height?: string;
   width?: string;
+  error?: string | null | undefined;
 }
 
 export interface EditorDimensions {

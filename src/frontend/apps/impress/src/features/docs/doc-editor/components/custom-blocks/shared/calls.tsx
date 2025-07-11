@@ -2,13 +2,16 @@ import axios from 'axios';
 
 function escapeMermaidSpecialChars(text: string): string {
   return text
-    .replace(/\\/g, '\\\\')  // escape backslashes
-    .replace(/\//g, '\\/')   // escape slashes
-    .replace(/\(/g, '\\(')   // escape (
-    .replace(/\)/g, '\\)');  // escape )
+    .replace(/\\/g, '\\\\') // escape backslashes
+    .replace(/\//g, '\\/') // escape slashes
+    .replace(/\(/g, '\\(') // escape (
+    .replace(/\)/g, '\\)'); // escape )
 }
 
-export async function callAlbertAI(blockType: string, request: string): Promise<string> {
+export async function callAlbertAI(
+  blockType: string,
+  request: string,
+): Promise<string> {
   let prompt = '';
   if (blockType == 'latex') {
     prompt = `Produce the LateX code from a simple sentence, follow these steps : \n 
@@ -33,20 +36,20 @@ export async function callAlbertAI(blockType: string, request: string): Promise<
         \n"
         Sentence :${request}`;
   } else {
-        return 'Unsupported block type';
-    };
+    return 'Unsupported block type';
+  }
 
   const response = await axios.post(
     'https://albert.api.etalab.gouv.fr/v1',
     {
-      model : 'albert-large',
+      model: 'albert-large',
       messages: [{ role: 'user', content: prompt }],
     },
     {
       headers: {
         'Content-Type': 'application/json',
       },
-    }
+    },
   );
 
   var latexResponse = response.data.choices[0].message.content.trim();

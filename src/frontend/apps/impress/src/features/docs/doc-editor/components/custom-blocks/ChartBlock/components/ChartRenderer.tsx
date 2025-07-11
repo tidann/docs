@@ -2,11 +2,18 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { Box } from '@/components';
 
-import {ComputeEngine} from '@cortex-js/compute-engine';
-const ce = new ComputeEngine()
+import { ComputeEngine } from '@cortex-js/compute-engine';
+const ce = new ComputeEngine();
 
-import {Scatter} from 'react-chartjs-2';
-import { Chart as ChartJS, LineElement, PointElement, LinearScale, Title, CategoryScale} from 'chart.js';
+import { Scatter } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  CategoryScale,
+} from 'chart.js';
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Title);
 
 import { FunctionEditor } from '../../../FunctionEditor';
@@ -20,35 +27,41 @@ const colors = [
   'rgb(75, 192, 192)',
   'rgb(0, 0, 0)',
   'rgb(160, 0, 160)',
-]
+];
 
-const computeChartConfig = (xValue : number[], yValue : number[][]) => {
+const computeChartConfig = (xValue: number[], yValue: number[][]) => {
   let _datasets = [] as any[];
   yValue.forEach((y, i) => {
-      _datasets.push({
-        type: 'line',
-        label: '',
-        data: y.map((val, i) => {return {x : xValue[i], y : val}}),
-        fill: false,
-        borderColor: colors[i],
-        tension: 0.1
-      })
-    }
-  );
+    _datasets.push({
+      type: 'line',
+      label: '',
+      data: y.map((val, i) => {
+        return { x: xValue[i], y: val };
+      }),
+      fill: false,
+      borderColor: colors[i],
+      tension: 0.1,
+    });
+  });
 
   return {
-    labels : makeArr(xValue[0], xValue[xValue.length - 1], 5).map(val => Math.round(val * 100) / 100),
-    datasets : _datasets
-  }
+    labels: makeArr(xValue[0], xValue[xValue.length - 1], 5).map(
+      (val) => Math.round(val * 100) / 100,
+    ),
+    datasets: _datasets,
+  };
 };
 
-const makeArr = (startValue : number, stopValue : number, cardinality : number ) => {
+const makeArr = (
+  startValue: number,
+  stopValue: number,
+  cardinality: number,
+) => {
   let arr = [];
   let step = (stopValue - startValue) / cardinality;
-  for (let i = 0; i < cardinality; i++)
-    arr.push(startValue + (step * i));
+  for (let i = 0; i < cardinality; i++) arr.push(startValue + step * i);
   return arr;
-}
+};
 
 export const ChartRenderer = ({
   functions,
@@ -64,14 +77,14 @@ export const ChartRenderer = ({
 
   useEffect(() => {
     try {
-      const arr = makeArr(min, max, num); 
+      const arr = makeArr(min, max, num);
       let prepareY = [] as number[][];
-      functions.forEach(fun => {
+      functions.forEach((fun) => {
         try {
-          const fn = ce.parse(fun).compile()
-          prepareY.push(arr.map(val => Number(fn({x : val}))))
+          const fn = ce.parse(fun).compile();
+          prepareY.push(arr.map((val) => Number(fn({ x: val }))));
         } catch {
-          prepareY.push(Array.from({length: num+1}, () => NaN));
+          prepareY.push(Array.from({ length: num + 1 }, () => NaN));
         }
       });
 
@@ -80,7 +93,7 @@ export const ChartRenderer = ({
     } catch {
       setxValue([-5, 5]);
       setyValue([[NaN, NaN]]);
-    } 
+    }
   }, [functions, min, max, num]);
 
   return (
@@ -101,23 +114,23 @@ export const ChartRenderer = ({
       role="button"
       tabIndex={0}
     >
-      <Scatter 
-        data = {computeChartConfig(xValue, yValue)}
-        options= {{
-          elements : {
-            point : {
-              pointStyle : false
+      <Scatter
+        data={computeChartConfig(xValue, yValue)}
+        options={{
+          elements: {
+            point: {
+              pointStyle: false,
             },
-            line : {
-              borderWidth : 4
-            }
+            line: {
+              borderWidth: 4,
+            },
           },
           scales: {
             x: {
               type: 'linear',
-              position: 'bottom'
-            }
-          }
+              position: 'bottom',
+            },
+          },
         }}
       />
       {isLocalEditing && (

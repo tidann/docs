@@ -39,7 +39,7 @@ import {
   MermaidBlock,
   ChartBlock,
   LatexAIBlock,
-  MermaidAIBlock
+  MermaidAIBlock,
 } from './custom-blocks';
 
 export const blockNoteSchema = withPageBreak(
@@ -52,7 +52,7 @@ export const blockNoteSchema = withPageBreak(
       mermaid: MermaidBlock,
       chart: ChartBlock,
       latexai: LatexAIBlock,
-      mermaidai: MermaidAIBlock
+      mermaidai: MermaidAIBlock,
     },
     inlineContentSpecs: {
       ...defaultInlineContentSpecs,

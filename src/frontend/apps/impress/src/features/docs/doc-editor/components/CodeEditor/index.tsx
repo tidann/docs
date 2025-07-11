@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Editor from '@monaco-editor/react';
 import { Button } from '@openfun/cunningham-react';
 import React, { useEffect, useState } from 'react';
@@ -8,7 +9,7 @@ import { Box, Icon } from '@/components';
 import { getEditorOptions, initializeMonaco } from './config/editorConfig';
 import { useClickOutside } from './hooks/useClickOutside';
 import { useEditorDimensions } from './hooks/useEditorDimensions';
-import { containerStyles, editorContainerStyles } from './styles/editorStyles';
+import { containerStyles } from './styles/editorStyles';
 import type { CodeEditorProps } from './types';
 
 export const CodeEditor = ({
@@ -19,6 +20,7 @@ export const CodeEditor = ({
   language = 'latex',
   height = '190px',
   width,
+  error = null,
 }: CodeEditorProps) => {
   const { t } = useTranslation();
   const { height: parentHeight, width: parentWidth } =
@@ -43,24 +45,23 @@ export const CodeEditor = ({
       $position="absolute"
       $zIndex={1000}
       $margin={containerMargin}
-      $padding="1rem"
       $background="white"
       style={{
         ...containerStyles,
         width: containerWidth,
       }}
     >
-      <Box style={editorContainerStyles}>
-        <Editor
-          language={language}
-          height={height}
-          value={localValue}
-          onChange={(value) => setLocalValue(value || '')}
-          options={getEditorOptions(language)}
-          theme="vs-light"
-        />
-      </Box>
-      <div style={{ marginTop: 'auto' }}>
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
+        <Box style={{ flex: 1 }}>
+          <Editor
+            language={language}
+            height={height}
+            value={localValue}
+            onChange={(value) => setLocalValue(value || '')}
+            options={getEditorOptions(language)}
+            theme="vs-light"
+          />
+        </Box>
         <Button
           size="small"
           iconPosition="right"
@@ -71,6 +72,21 @@ export const CodeEditor = ({
           {t('OK')}
         </Button>
       </div>
+      {error && (
+        <Box
+          $margin="0.5rem 0 0 0"
+          $padding="0.5rem"
+          style={{
+            backgroundColor: '#fff3e0',
+            color: '#e65100',
+            borderRadius: '4px',
+            fontSize: '14px',
+            fontFamily: 'monospace',
+          }}
+        >
+          {error}
+        </Box>
+      )}
     </Box>
   );
 };

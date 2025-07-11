@@ -16,7 +16,7 @@ export const getMermaidAIReactSlashMenuItems = (
     onItemClick: () => {
       insertOrUpdateBlock(editor, {
         type: 'mermaidai',
-        props: {}
+        props: {},
       });
     },
     aliases: ['ai', 'mermaid', 'mermaidai'],

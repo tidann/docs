@@ -1,5 +1,4 @@
 import type { Block, BlockNoteEditor } from '@blocknote/core';
- 
 
 export interface SlashMenuItemProps {
   editor: BlockNoteEditor;

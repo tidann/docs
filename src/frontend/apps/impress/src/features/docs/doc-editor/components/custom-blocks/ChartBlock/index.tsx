@@ -8,7 +8,12 @@ import { blockSpec } from './config/blockConfig';
 export const ChartBlock = createReactBlockSpec(blockSpec, {
   render: (props) => {
     const { block, editor } = props;
-    const handleFormulaChange = (newFunctions: string[], newMin : number, newMax : number, newNum : number) => {
+    const handleFormulaChange = (
+      newFunctions: string[],
+      newMin: number,
+      newMax: number,
+      newNum: number,
+    ) => {
       editor.updateBlock(block, {
         props: {
           functions: newFunctions,
@@ -24,9 +29,9 @@ export const ChartBlock = createReactBlockSpec(blockSpec, {
     return (
       <ChartRenderer
         functions={block.props.functions}
-        min = {block.props.min}
-        max = {block.props.max}
-        num = {block.props.num}
+        min={block.props.min}
+        max={block.props.max}
+        num={block.props.num}
         onFormulaChange={handleFormulaChange}
       />
     );
