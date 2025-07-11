@@ -3,7 +3,7 @@ import { Button } from '@openfun/cunningham-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Box } from '@/components';
+import { Box, Icon } from '@/components';
 
 import { getEditorOptions, initializeMonaco } from './config/editorConfig';
 import { useClickOutside } from './hooks/useClickOutside';
@@ -17,7 +17,7 @@ export const CodeEditor = ({
   onClickOutside,
   parentRef,
   language = 'latex',
-  height = '200px',
+  height = '190px',
   width,
 }: CodeEditorProps) => {
   const { t } = useTranslation();
@@ -34,7 +34,7 @@ export const CodeEditor = ({
     void initializeMonaco();
   }, []);
 
-  const containerWidth = width || `${((parentWidth - 32) * 4) / 5}px`;
+  const containerWidth = width || `${parentWidth}px`;
   const containerMargin = `${parentHeight}px 0 0 -16px`;
 
   return (
@@ -60,7 +60,17 @@ export const CodeEditor = ({
           theme="vs-light"
         />
       </Box>
-      <Button onClick={() => onChange(localValue)}>{t('Validate')}</Button>
+      <div style={{ marginTop: 'auto' }}>
+        <Button
+          size="small"
+          iconPosition="right"
+          color="primary"
+          icon={<Icon $variation="000" iconName="keyboard_return" />}
+          onClick={() => onChange(localValue)}
+        >
+          {t('OK')}
+        </Button>
+      </div>
     </Box>
   );
 };

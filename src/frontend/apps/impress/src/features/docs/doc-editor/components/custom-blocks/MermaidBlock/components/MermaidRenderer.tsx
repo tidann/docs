@@ -87,10 +87,8 @@ export const MermaidRenderer = ({
           onClickOutside={() => setIsLocalEditing(false)}
           parentRef={blockRef}
           language="mermaid"
-          height="300px"
         />
       )}
     </Box>
   );
 };
- 
