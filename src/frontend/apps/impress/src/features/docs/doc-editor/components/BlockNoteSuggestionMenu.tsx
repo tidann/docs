@@ -14,11 +14,7 @@ import { DocsBlockSchema } from '../types';
 import {
   getCalloutReactSlashMenuItems,
   getDividerReactSlashMenuItems,
-  getLatexReactSlashMenuItems,
   getMermaidReactSlashMenuItems,
-  getChartReactSlashMenuItems,
-  getLatexAIReactSlashMenuItems,
-  getMermaidAIReactSlashMenuItems
 } from './custom-blocks';
 
 export const BlockNoteSuggestionMenu = () => {
@@ -35,11 +31,7 @@ export const BlockNoteSuggestionMenu = () => {
             getPageBreakReactSlashMenuItems(editor),
             getCalloutReactSlashMenuItems(editor, t, basicBlocksName),
             getDividerReactSlashMenuItems(editor, t, basicBlocksName),
-            getLatexReactSlashMenuItems(editor, t, basicBlocksName),
-            getMermaidReactSlashMenuItems(editor, t, basicBlocksName),
-            getChartReactSlashMenuItems(editor, t, basicBlocksName),
-            getLatexAIReactSlashMenuItems(editor, t, basicBlocksName),
-            getMermaidAIReactSlashMenuItems(editor, t, basicBlocksName),
+            getMermaidReactSlashMenuItems(editor, t, basicBlocksName)
           ),
           query,
         ),

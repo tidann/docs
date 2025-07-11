@@ -28,18 +28,10 @@ import { randomColor } from '../utils';
 
 import { BlockNoteSuggestionMenu } from './BlockNoteSuggestionMenu';
 import { BlockNoteToolbar } from './BlockNoteToolBar/BlockNoteToolbar';
-import parseMarkdownWithLatex from './BlockNoteToolBar/utils';
-import { InlineLatex } from './InlineLatex/';
-import getInlineLatexMenuItems from './InlineLatex/components/InlineLatexContentSpec';
-import { useLatexDetection } from './InlineLatex/hooks/useLatexDetection';
 import {
   CalloutBlock,
   DividerBlock,
-  LatexBlock,
   MermaidBlock,
-  ChartBlock,
-  LatexAIBlock,
-  MermaidAIBlock
 } from './custom-blocks';
 
 export const blockNoteSchema = withPageBreak(
@@ -48,15 +40,10 @@ export const blockNoteSchema = withPageBreak(
       ...defaultBlockSpecs,
       callout: CalloutBlock,
       divider: DividerBlock,
-      latex: LatexBlock,
       mermaid: MermaidBlock,
-      chart: ChartBlock,
-      latexai: LatexAIBlock,
-      mermaidai: MermaidAIBlock
     },
     inlineContentSpecs: {
-      ...defaultInlineContentSpecs,
-      inlineLatex: InlineLatex,
+      ...defaultInlineContentSpecs
     },
   }),
 );
@@ -85,8 +72,6 @@ export const BlockNoteEditor = ({ doc, provider }: BlockNoteEditorProps) => {
     ? 'Reader'
     : user?.full_name || user?.email || t('Anonymous');
   const showCursorLabels: 'always' | 'activity' | (string & {}) = 'activity';
-
-  let editorWillPaste = false;
 
   const editor: DocsBlockNoteEditor = useCreateBlockNote(
     {
@@ -149,35 +134,12 @@ export const BlockNoteEditor = ({ doc, provider }: BlockNoteEditorProps) => {
       },
       uploadFile,
       schema: blockNoteSchema,
-      pasteHandler: ({ event, editor }) => {
-        const text = event.clipboardData?.getData('text/plain');
-        if (text) {
-          editorWillPaste = true;
-          void editor.pasteMarkdown(text);
-        }
-        return true;
-      },
     },
     [collabName, lang, provider, uploadFile],
   );
 
-  editor.onChange((editor, { getChanges }) => {
-    if (editorWillPaste) {
-      editorWillPaste = false;
-
-      const changes = getChanges();
-      changes.forEach((change) => {
-        if (change.type === 'update' || change.type === 'insert') {
-          const [newBlock] = parseMarkdownWithLatex([change.block]);
-          editor.updateBlock(change.block.id, newBlock);
-        }
-      });
-    }
-  });
-
   useHeadings(editor);
   useUploadStatus(editor);
-  useLatexDetection(editor);
 
   useEffect(() => {
     setEditor(editor);
@@ -214,11 +176,6 @@ export const BlockNoteEditor = ({ doc, provider }: BlockNoteEditorProps) => {
         <BlockNoteSuggestionMenu />
 
         <BlockNoteToolbar />
-
-        <SuggestionMenuController
-          triggerCharacter="$"
-          getItems={async (query) => getInlineLatexMenuItems(editor, query)}
-        />
       </BlockNoteView>
     </Box>
   );
@@ -250,10 +207,6 @@ export const BlockNoteEditorVersion = ({
   return (
     <Box $css={cssEditor(readOnly)} className="--docs--editor-container">
       <BlockNoteView editor={editor} editable={!readOnly} theme="light" />
-      <SuggestionMenuController
-        triggerCharacter="$"
-        getItems={async (query) => getInlineLatexMenuItems(editor)}
-      />
     </Box>
   );
 };
